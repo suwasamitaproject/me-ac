@@ -2,7 +2,7 @@ program MEAC_ParkingSystem;
 uses crt;
 
 const
-  MAX_PARKIR = 50; // kapasitas maksimal parkiran
+  MAX_PARKIR = 50;
 
 var
 
@@ -22,20 +22,18 @@ var
 begin
   jmlKendaraan := 0;
 
-  // Efek booting ala Mainframe (Pakai For-To-Do)
   clrscr;
   writeln('System Initializing...');
   write('Booting M.E. A.C. ');
   for i := 1 to 10 do
   begin
     write('.');
-    delay(200); // delay biar ada efek loadingnya
+    delay(200);
   end;
   writeln;
   writeln('Booting selesai! Press Enter to start.');
   readln;
 
-  // MENU INTERAKTIF (Pakai Repeat-Until)
   repeat
     clrscr;
     writeln('-------------------/ /-------------------');
@@ -50,7 +48,7 @@ begin
     write('Pilih menu [1-4]: ');
     readln(pilihanMenu);
 
-    // PENGKONDISIAN (Pakai Case-Of)
+  
     case pilihanMenu of
       1:
       begin
@@ -65,7 +63,6 @@ begin
         begin
           jmlKendaraan := jmlKendaraan + 1;
           
-          // INPUT/OUTPUT
           write('Masukkan Plat Nomor      : '); readln(platData[jmlKendaraan]);
           write('Jenis [M: Mobil/S: Motor]: '); readln(jenisData[jmlKendaraan]);
           write('Jam Masuk [0-23]         : '); readln(jamMasukData[jmlKendaraan]);
@@ -83,7 +80,7 @@ begin
         writeln('-- CHECKOUT & PAYMENT --');
         if jmlKendaraan = 0 then
         begin
-           writeln('Parkiran masih kosong coy, ga ada yang bisa di-checkout.');
+          writeln('Parkiran masih kosong coy, ga ada yang bisa di-checkout.');
         end
         else
         begin
@@ -99,7 +96,6 @@ begin
               isKetemu := true;
               write('Jam Keluar [0-23]           : '); readln(jamKeluar);
 
-              // NESTED IF: Logika ngitung durasi (jaga-jaga kalau dia nginap lewat jam 12 malam)
               if jamKeluar >= jamMasukData[i] then
               begin
                 durasi := jamKeluar - jamMasukData[i];
@@ -109,23 +105,23 @@ begin
                 durasi := (24 - jamMasukData[i]) + jamKeluar;
               end;
 
-              if durasi = 0 then durasi := 1; // minimal dihitung 1 jam
+              if durasi = 0 then durasi := 1; 
 
-              // NESTED IF: Nentuin tarif dasar berdasarkan jenis kendaraan
+
               if upcase(jenisData[i]) = 'M' then
               begin
-                biayaTotal := 5000 + ((durasi - 1) * 2000); // 5rb sejam pertama, next 2rb
+                biayaTotal := 5000 + ((durasi - 1) * 2000); 
               end
               else if upcase(jenisData[i]) = 'S' then
               begin
-                biayaTotal := 2000 + ((durasi - 1) * 1000); // 2rb sejam pertama, next 1rb
+                biayaTotal := 2000 + ((durasi - 1) * 1000); 
               end
               else
               begin
-                biayaTotal := 10000; // default tarif kalau input jenisnya ngaco
+                biayaTotal := 10000; 
               end;
 
-              // PENGKONDISIAN: Cek member
+      
               writeln('Punya kartu member M.E. A.C? [Y/N]');
               write('Jawaban: '); readln(member);
 
@@ -136,28 +132,26 @@ begin
               end;
 
               writeln;
-              writeln('__̴ı̴̴̡̡̡ ̡͌l̡̡̡ ̡͌l̡*̡̡ ̴̡ı̴̴̡ ̡̡͡|̲̲̲͡͡͡ ̲▫̲͡ ̲̲̲͡͡π̲̲͡͡ ̲̲͡▫̲̲͡͡ ̲|̡̡̡ ̡ ̴̡ı̴̡̡ ̡͌l̡̡̡̡.___');
+              writeln('-------------------/ /-------------------');
               writeln('STRUK PARKIR M.E. A.C.');
               writeln('Plat Nomor : ', upcase(platData[i]));
               writeln('Durasi     : ', durasi, ' Jam');
               writeln('Total Bayar: Rp ', biayaTotal);
-              writeln('__̴ı̴̴̡̡̡ ̡͌l̡̡̡ ̡͌l̡*̡̡ ̴̡ı̴̴̡ ̡̡͡|̲̲̲͡͡͡ ̲▫̲͡ ̲̲̲͡͡π̲̲͡͡ ̲̲͡▫̲̲͡͡ ̲|̡̡̡ ̡ ̴̡ı̴̡̡ ̡͌l̡̡̡̡.___');
+              writeln('-------------------/ /-------------------');
 
-              // Hapus data dari array (geser datanya ke kiri)
+          
               for j := i to jmlKendaraan - 1 do
               begin
                 platData[j] := platData[j+1];
                 jenisData[j] := jenisData[j+1];
                 jamMasukData[j] := jamMasukData[j+1];
               end;
-              jmlKendaraan := jmlKendaraan - 1; // kurangi jumlah mobil di parkiran
+              jmlKendaraan := jmlKendaraan - 1;
 
-              // PELONCATAN: Kalau udah ketemu dan dibayar, langsung stop perulangan pencariannya
               break; 
             end;
           end;
 
-          // Kalau loop selesai tapi ga ketemu
           if isKetemu = false then
             writeln('Plat nomor ngga ketemu di Mainframe. Coba cek lagi.');
         end;
@@ -176,15 +170,13 @@ begin
         end
         else
         begin
-          // PERULANGAN (Pakai While-Do)
           i := 1;
           while i <= jmlKendaraan do
           begin
-            // PELONCATAN: Fitur rahasia, kalau ada plat ADMIN, jangan di-print ke layar (skip)
             if upcase(platData[i]) = 'ADMIN' then
             begin
               i := i + 1;
-              continue; // Langsung lompat ke iterasi loop berikutnya
+              continue;
             end;
 
             writeln(i, '. Plat: ', upcase(platData[i]), ' | Tipe: ', upcase(jenisData[i]), ' | Masuk jam: ', jamMasukData[i], ':00');
